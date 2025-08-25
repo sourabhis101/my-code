@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<div id="header"></div>
+    <div class="container">
+       
+
+  
+
+  <main>
+
+    <section id="variables">
+      <h2>1. Variables</h2>
+      <p>Basic variable declarations and scope.</p>
+      <pre><code>var oldVar = 10;      // function-scoped (avoid)
+let age = 25;            // block-scoped, reassignable
+const PI = 3.14;        // block-scoped, cannot be reassigned
+
+// Example
+age = 30;  // ✅ allowed
+// PI = 3.14159; ❌ Error (const can't be reassigned)
+
+const student = { name: "Name" };
+student.name = "change"; // ✅ allowed (object contents can change)
+
+console.log(oldVar, age, PI, student);</code></pre>
+    </section>
+
+    <section id="data-types">
+      <h2>2. Data Types</h2>
+      <p>Primitive and complex data types; examples and type checks.</p>
+      <pre><code>let str = "Hello";       // String
+let num = 99;             // Number
+let isAdmin = true;       // Boolean
+let notDefined;           // undefined
+let emptyVal = null;      // null
+let big = 123456789n;     // BigInt
+let sym = Symbol("id");   // Symbol
+
+console.log(typeof str, typeof num, typeof isAdmin, typeof notDefined, typeof emptyVal);
+
+// Type coercion examples
+console.log("5" + 1); // "51"  (string concatenation)
+console.log("5" - 1); // 4     (number conversion)
+console.log(true + 1); // 2</code></pre>
+    </section>
+
+    <section id="operators">
+      <h2>3. Operators</h2>
+      <p>Arithmetic, assignment, comparison, logical operators and ternary.</p>
+      <pre><code>let a = 10, b = 3;
+console.log(a + b, a - b, a * b, a / b, a % b, a ** b);
+
+let score = 5;
+score += 2; // 7
+console.log(score);
+
+// Comparison
+console.log(5 == "5");  // true  (loose equality)
+console.log(5 === "5"); // false (strict equality)
+
+// Logical + conditional example
+let age2 = 20, hasID = true;
+if (age2 &gt;= 18 &amp;&amp; hasID) console.log("Allowed");
+
+// Ternary
+let grade = score &gt; 5 ? "Pass" : "Fail";
+console.log(grade);</code></pre>
+    </section>
+
+    <section id="control-flow">
+      <h2>4. Control Flow</h2>
+      <p>If / else and switch statements.</p>
+      <pre><code>let marks = 78;
+if (marks &gt;= 90) {
+  console.log("A");
+} else if (marks &gt;= 75) {
+  console.log("B");
+} else {
+  console.log("C");
+}
+
+// switch
+let fruit = "apple";
+switch (fruit) {
+  case "banana": console.log("Yellow"); break;
+  case "apple": console.log("Red"); break;
+  default: console.log("Unknown");
+}</code></pre>
+    </section>
+
+    <section id="loops">
+      <h2>5. Loops</h2>
+      <p>for, while, do-while, for-of, forEach and for-in.</p>
+      <pre><code>// for loop
+for (let i = 0; i &lt; 5; i++) {
+  console.log("for loop:", i);
+}
+
+// while loop
+let i = 0;
+while (i &lt; 3) {
+  console.log("while loop:", i);
+  i++;
+}
+
+do {
+  console.log("do-while loop runs at least once");
+} while (false);
+
+// for-of
+for (let char of "JS") console.log("for-of:", char);
+
+// forEach
+[10, 20, 30].forEach(n =&gt; console.log("forEach:", n));
+
+// for-in (objects)
+let user = { name: "Harsh", age: 26 };
+for (let key in user) console.log("for-in:", key, user[key]);</code></pre>
+    </section>
+
+    <section id="functions">
+      <h2>6. Functions</h2>
+      <p>Function declarations, expressions, arrow functions, defaults, rest, spread, and closures.</p>
+      <pre><code>function greet(name) {
+  return "Hello " + name;
+}
+console.log(greet("Harsh"));
+
+// Function expression
+const add = function (x, y) { return x + y; };
+console.log(add(5, 10));
+
+// Arrow function
+const multiply = (x, y) =&gt; x * y;
+console.log(multiply(3, 4));
+
+// Default parameters
+function sum(a = 0, b = 0) { return a + b; }
+console.log(sum(5));
+
+// rest + spread
+function total(...nums) {
+  return nums.reduce((acc, val) =&gt; acc + val, 0);
+}
+console.log(total(1, 2, 3, 4));
+
+let arr = [1, 2, 3];
+console.log(total(...arr)); // spread
+
+// Closure example
+function counter() {
+  let count = 0;
+  return function () {
+    count++;
+    return count;
+  };
+}
+let myCounter = counter();
+console.log(myCounter(), myCounter());</code></pre>
+    </section>
+
+    <section id="arrays">
+      <h2>7. Arrays</h2>
+      <p>Common array operations: push, map, filter, reduce, find, destructuring, spread.</p>
+      <pre><code>let fruits = ["apple", "banana", "mango"];
+fruits.push("orange"); // add
+console.log(fruits);
+
+let nums = [1, 2, 3, 4, 5];
+console.log(nums.map(n =&gt; n * 2));         // map
+console.log(nums.filter(n =&gt; n % 2 === 0)); // filter
+console.log(nums.reduce((a, b) =&gt; a + b));  // reduce
+console.log(nums.find(n =&gt; n &gt; 2));       // find
+
+let [first, second] = fruits;
+console.log(first, second);
+
+let newNums = [...nums, 99]; // spread
+console.log(newNums);</code></pre>
+    </section>
+
+    <section id="objects">
+      <h2>8. Objects</h2>
+      <p>Object creation, property access, destructuring, copying, optional chaining, dynamic keys.</p>
+      <pre><code>let book = {
+  title: "JS Guide",
+  author: "Someone",
+  price: 499,
+  address: { city: "Delhi", pincode: 110001 }
+};
+console.log(book.title, book["author"]);
+console.log(book.address.city);
+
+// Destructuring
+let { title, price } = book;
+console.log(title, price);
+
+// Loop through object
+for (let key in book) console.log(key, book[key]);
+
+console.log(Object.keys(book));
+console.log(Object.entries(book));
+
+// Copy objects
+let shallowCopy = { ...book };
+let deepCopy = JSON.parse(JSON.stringify(book));
+
+console.log(book?.publisher?.name); // optional chaining example
+console.log(deepCopy);
+
+let keyName = "rating";
+let review = { [keyName]: 4.5 };
+console.log(review);</code></pre>
+    </section>
+
+    <section id="closing">
+      <h2>That’s the JS Basics Starter Pack!</h2>
+      <p>Master these fundamentals before moving to DOM, asynchronous JavaScript, and advanced topics.</p>
+       </section>
+
+  </main>
+
+  
+
+
+
+<div id="footer"></div>
+    </div>
+    <script src="index.js"></script>
+    
+</body>
+</html>

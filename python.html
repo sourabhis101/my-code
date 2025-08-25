@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <title>My Code Journey</title>
+  <meta name="description" content="A personal code journey website built with pure HTML, CSS, and JavaScript." />
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="header"></div>
+    <main class="container">
+       
+  <h1>🐍 Python Programming Summary (Basics → Advanced)</h1>
+  <p>Concise explanations with code snippets for each concept. No CSS or JavaScript included.</p>
+
+  <h2>1. What is Python & Why Learn It</h2>
+  <p>Python is a high-level, interpreted language known for simplicity and readability. Used in web development, data analysis, machine learning, automation, scripting, and more.</p>
+  <ul>
+    <li>Beginner-friendly syntax</li>
+    <li>Large standard library &amp; third-party ecosystem</li>
+    <li>Cross-platform: Windows, Linux, macOS</li>
+  </ul>
+
+  <h2>2. Setup & Tools</h2>
+  <p>Install from <code>python.org</code> or use system package managers. Verify with <code>python --version</code> / <code>pip --version</code>. Recommended editors: VS Code, PyCharm, Jupyter Notebook. Use virtual environments via <code>python -m venv myenv</code>.</p>
+
+  <h2>3. Basic Syntax & Comments</h2>
+  <pre><code>print("Hello, World!")    # single-line comment
+"""This is a
+multiline comment-like string"""
+  </code></pre>
+
+  <h2>4. Operators</h2>
+  <p>Arithmetic, comparison, logical, floor-division, modulus, exponentiation:</p>
+  <pre><code>a, b = 10, 5
+print(a + b, a - b, a * b)
+print(a / b, a // b, a % b, a ** 2)
+print(a == b, a &gt; b)
+print((a &gt; 1) and (b &lt; 10))
+  </code></pre>
+
+  <h2>5. Variables & Data Types</h2>
+  <p>Core types: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>, <code>None</code>.</p>
+  <pre><code>x = 5
+y = 3.14
+name = "Alice"
+is_active = True
+# Casting
+n = int("10")
+s = str(25)
+f = float("3.5")
+  </code></pre>
+
+  <h2>6. Lists</h2>
+  <p>Mutable ordered collections; slicing; comprehensions; common methods.</p>
+  <pre><code>fruits = ["apple","banana","cherry"]
+fruits.append("orange")
+print(fruits[0])
+# slicing
+nums = [1,2,3,4,5]
+print(nums[1:4])
+# comprehension
+squares = [x*x for x in range(5)]
+  </code></pre>
+
+  <h2>7. Tuples</h2>
+  <p>Immutable ordered collections. For single-element tuple use trailing comma.</p>
+  <pre><code>t = (1,2,3)
+single = (5,)
+# t[0] = 10  # TypeError
+  </code></pre>
+
+  <h2>8. Dictionaries</h2>
+  <p>Key-value mapping, unordered, mutable.</p>
+  <pre><code>person = {"name":"Alice","age":25}
+print(person["name"])
+print(person.get("city","N/A"))
+for k,v in person.items():
+    print(k, v)
+  </code></pre>
+
+  <h2>9. Sets</h2>
+  <p>Unordered collection of unique elements — supports union, intersection, difference.</p>
+  <pre><code>s1 = {1,2,3}
+s2 = {3,4,5}
+print(s1 | s2)   # union
+print(s1 & s2)   # intersection
+print(s1 - s2)   # difference
+  </code></pre>
+
+  <h2>10. Conditional Statements</h2>
+  <pre><code>if x &gt; 5:
+    print("greater")
+elif x == 5:
+    print("equal")
+else:
+    print("smaller")
+# ternary
+status = "Adult" if age &gt;= 18 else "Minor"
+  </code></pre>
+
+  <h2>11. Loops</h2>
+  <pre><code># for
+for i in range(5):
+    print(i)
+# while
+i = 0
+while i &lt; 5:
+    print(i)
+    i += 1
+# break / continue supported
+  </code></pre>
+
+  <h2>12. Functions</h2>
+  <p>Define reusable blocks, support default args, *args, **kwargs, and return values.</p>
+  <pre><code>def greet(name="User"):
+    return f"Hello, {name}"
+
+def add_all(*nums):
+    return sum(nums)
+
+def show(**info):
+    for k,v in info.items():
+        print(k,v)
+
+# lambda
+square = lambda x: x*x
+  </code></pre>
+
+  <h2>13. File Handling</h2>
+  <pre><code># write
+with open("example.txt","w", encoding="utf-8") as f:
+    f.write("Hello")
+# read
+with open("example.txt","r", encoding="utf-8") as f:
+    print(f.read())
+# iterate large files line-by-line
+  </code></pre>
+
+  <h2>14. Exception Handling</h2>
+  <pre><code>try:
+    x = 10 / 0
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+else:
+    print("No error")
+finally:
+    print("Always runs")
+  </code></pre>
+
+  <h2>15. Lambda, Map, Filter, Reduce</h2>
+  <pre><code>nums = [1,2,3,4]
+squared = list(map(lambda x: x*x, nums))
+evens = list(filter(lambda x: x % 2 == 0, nums))
+from functools import reduce
+product = reduce(lambda a,b: a*b, nums)
+  </code></pre>
+
+  <h2>16. Regular Expressions (re)</h2>
+  <p>Search, match, findall, sub, split. Useful patterns for digits (<code>\d+</code>), emails, URLs, hashtags, etc.</p>
+  <pre><code>import re
+m = re.search(r"\d+", "I have 42 apples")
+if m: print(m.group())
+emails = re.findall(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+", text)
+text2 = re.sub(r"\s+", " ", "a    b")   # collapse spaces
+  </code></pre>
+
+  <h2>17. Dates & Times</h2>
+  <pre><code>from datetime import datetime
+now = datetime.now()
+print(now.strftime("%Y-%m-%d %H:%M:%S"))
+  </code></pre>
+
+  <h2>18. Modules & Packages</h2>
+  <p>Import built-ins (e.g., <code>math</code>, <code>os</code>) or install via <code>pip</code>. Create your own modules (file = module).</p>
+
+  <h2>19. Fibonacci Examples & Application</h2>
+  <pre><code>def fib(n):
+    a,b = 0,1
+    while a &lt; n:
+        print(a, end=' ')
+        a,b = b, a+b
+    print()
+
+# fibonacci list
+def fib_list(n):
+    a,b = 0,1
+    seq = []
+    while a &lt; n:
+        seq.append(a)
+        a,b = b, a+b
+    return seq
+  </code></pre>
+  <p>Example application: Fibonacci retracement levels in trading (38.2%, 50%, 61.8%, 78.6%) calculated using ratios of sequence values. (See PDF for trading example.)</p>
+
+  <h2>20. OOP Fundamentals</h2>
+  <p>Classes, objects, attributes, methods, inheritance, encapsulation (private attributes using <code>__</code>), polymorphism, abstraction (abstract base classes).</p>
+   <pre><code># Class & object
+class Student:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def info(self):
+        return f"{self.name} is {self.age}"
+
+s1 = Student("Harry", 21)
+print(s1.info())
+
+# Inheritance
+class Animal:
+    def speak(self):
+        return "Animal sound"
+class Dog(Animal):
+    def speak(self):
+        return "Bark"
+print(Dog().speak())
+
+# Encapsulation (convention)
+class Box:
+    def __init__(self):
+        self._hidden = 42  # protected by convention
+b = Box()
+print(b._hidden)
+
+# Polymorphism
+def make_sound(animal):
+    print(animal.speak())
+make_sound(Dog())
+
+# Class & static methods
+class Util:
+    rate = 1.18
+    @classmethod
+    def with_rate(cls, amount):
+        return amount * cls.rate
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+print(Util.with_rate(100))
+print(Util.add(2, 3))
+</code></pre>
+
+  <h2>21. Decorators</h2>
+  <pre><code>def decorator(fn):
+    def wrapper(*a, **k):
+        print("Before")
+        result = fn(*a, **k)
+        print("After")
+        return result
+    return wrapper
+
+@decorator
+def hello(): print("Hello")
+  </code></pre>
+
+  <h2>22. Iterators & Generators</h2>
+  <pre><code># iterator
+it = iter([1,2,3])
+print(next(it))
+
+# generator
+def count_up_to(n):
+    i = 1
+    while i &lt;= n:
+        yield i
+        i += 1
+for num in count_up_to(3): print(num)
+  </code></pre>
+
+  <h2>23. Comprehensions, enumerate & zip</h2>
+  <pre><code>squares = [x*x for x in range(6)]
+age_dict = {name: age for name, age in zip(["A","B"], [20,30])}
+for idx, val in enumerate(["a","b"]):
+    print(idx, val)
+  </code></pre>
+
+  <h2>24. Set Operations / Useful utilities</h2>
+  <pre><code>a = {1,2,3}
+b = {3,4,5}
+print(a | b, a & b, a - b)
+import time
+time.sleep(2)
+  </code></pre>
+
+  <h2>25. Concurrency — threading, multiprocessing, asyncio</h2>
+  <p>Use <code>threading</code> for I/O bound concurrency; <code>multiprocessing</code> for CPU-bound parallelism; <code>asyncio</code> for asynchronous coroutines.</p>
+  <pre><code># threading example
+import threading
+def f(): print("hello")
+t = threading.Thread(target=f); t.start(); t.join()
+
+# asyncio example
+import asyncio
+async def hello(): await asyncio.sleep(1); print("async hello")
+# asyncio.run(hello())
+  </code></pre>
+
+  <h2>26. Working with Data — JSON, CSV, Pandas, SQLite</h2>
+  <pre><code>import json
+d = {"name":"Alice"}
+s = json.dumps(d)
+obj = json.loads(s)
+
+import csv
+with open("data.csv","w", newline="") as f:
+    writer = csv.writer(f); writer.writerow(["name","age"])
+
+# pandas (install separately)
+# import pandas as pd
+# df = pd.DataFrame({"name":["A","B"], "age":[25,30]})
+
+import sqlite3
+conn = sqlite3.connect("ex.db")
+# create/insert/query using cursor
+conn.close()
+  </code></pre>
+
+  <h2>27. Web & APIs — requests & BeautifulSoup</h2>
+  <pre><code>import requests
+r = requests.get("https://api.github.com")
+print(r.status_code)
+print(r.json())
+
+# BeautifulSoup (install bs4)
+# from bs4 import BeautifulSoup
+# soup = BeautifulSoup(r.text, "html.parser")
+# for a in soup.find_all("a"): print(a.get("href"))
+  </code></pre>
+
+  <h2>28. Regex Practical Patterns</h2>
+  <p>Examples for finding emails, phone numbers, dates, hashtags and cleaning whitespace using <code>re</code>. Use <code>re.search</code>, <code>re.findall</code>, <code>re.sub</code>.</p>
+
+  <h2>29. Config, CLI & Type Hints</h2>
+  <pre><code>import configparser
+cfg = configparser.ConfigParser()
+cfg.read("config.ini")
+# argparse for CLI tools
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--name", type=str)
+args = parser.parse_args()
+# Type hints
+def add(a: int, b: int) -> int: return a + b
+  </code></pre>
+
+  <h2>30. YAML, PyYAML</h2>
+  <pre><code>import yaml
+data = {"name":"Alice"}
+yaml_str = yaml.dump(data)
+print(yaml_str)
+  </code></pre>
+
+  <h2>31. Advanced topics & best practices</h2>
+  <ul>
+    <li>Use virtual environments and pin dependencies in <code>requirements.txt</code>.</li>
+    <li>Prefer context managers (<code>with</code>) for resource safety.</li>
+    <li>Use linters and type checkers (flake8, mypy) for quality.</li>
+    <li>Write tests (unittest/pytest) and document functions with docstrings.</li>
+  </ul>
+
+  
+
+<div id="footer"></div>
+    </main>
+    
+
+    <script src="index.js"></script>
+</body>
+</html>
