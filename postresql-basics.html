@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Code Journey</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body >
+    <div id="header"></div>
+ <div class="container">
+  <h1>PostgreSQL — Basics to Advanced (Cheat‑sheet & Examples)</h1>
+<p class="lead">Readable, copy-ready examples to learn postgresql from first steps to advanced patterns.</p>
+
+
+ 
+
+  <section id="setup" >
+    <h2>Setup &amp; Connection</h2>
+    <pre><code># install (Debian/Ubuntu)
+sudo apt install postgresql postgresql-contrib
+
+# login
+psql -U postgres
+
+# connect to db
+\c mydb
+
+# help
+\?    # commands help
+\dt   # list tables
+\du   # list users
+</code></pre>
+  </section>
+
+  <section id="basics" >
+    <h2>Basics: Create &amp; Select</h2>
+    <pre><code>-- create db and table
+CREATE DATABASE shop;
+\c shop
+
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  price NUMERIC(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+-- insert
+INSERT INTO products (name, price) VALUES ('Pen', 1.20);
+
+-- select
+SELECT * FROM products;
+</code></pre>
+  </section>
+
+  <section id="datatypes" >
+    <h2>Data Types</h2>
+    <ul class="small">
+      <li><code>INTEGER, BIGINT, SERIAL</code></li>
+      <li><code>NUMERIC, DECIMAL</code> for exact precision</li>
+      <li><code>TEXT, VARCHAR(n), CHAR(n)</code></li>
+      <li><code>BOOLEAN</code></li>
+      <li><code>TIMESTAMP, DATE, TIME, INTERVAL</code></li>
+      <li><code>UUID</code></li>
+      <li><code>JSON, JSONB</code></li>
+      <li><code>ARRAY</code></li>
+      <li><code>HSTORE</code> (key-value)</li>
+      <li><code>GEOMETRY</code> (PostGIS extension)</li>
+    </ul>
+  </section>
+
+  <section id="constraints" >
+    <h2>Constraints</h2>
+    <pre><code>CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  age INT CHECK(age &gt;= 18),
+  role TEXT DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT now()
+);
+</code></pre>
+  </section>
+
+  <section id="joins" >
+    <h2>Joins</h2>
+    <pre><code>SELECT o.id, u.email
+FROM orders o
+JOIN users u ON u.id = o.user_id;
+
+-- left join
+SELECT * FROM users u
+LEFT JOIN orders o ON u.id = o.user_id;
+</code></pre>
+  </section>
+
+  <section id="functions" >
+    <h2>Functions &amp; Aggregates</h2>
+    <pre><code>-- aggregate
+SELECT COUNT(*), AVG(price) FROM products;
+
+-- string functions
+SELECT upper(name), length(name) FROM products;
+
+-- date functions
+SELECT now(), CURRENT_DATE, age(now(), created_at) FROM products;
+</code></pre>
+  </section>
+
+  <section id="indexes" >
+    <h2>Indexes</h2>
+    <pre><code>-- btree (default)
+CREATE INDEX idx_products_name ON products(name);
+
+-- unique index
+CREATE UNIQUE INDEX idx_users_email ON users(email);
+
+-- full text search
+CREATE INDEX idx_products_tsv ON products USING GIN(to_tsvector('english', name));
+</code></pre>
+  </section>
+
+  <section id="transactions" >
+    <h2>Transactions</h2>
+    <pre><code>BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;
+
+-- rollback
+BEGIN;
+UPDATE accounts SET balance = balance - 100;
+ROLLBACK;
+</code></pre>
+  </section>
+
+  <section id="views" >
+    <h2>Views &amp; Materialized Views</h2>
+    <pre><code>-- simple view
+CREATE VIEW active_users AS
+SELECT * FROM users WHERE active = true;
+
+-- materialized view
+CREATE MATERIALIZED VIEW sales_summary AS
+SELECT user_id, sum(amount) total FROM sales GROUP BY user_id;
+
+-- refresh
+REFRESH MATERIALIZED VIEW sales_summary;
+</code></pre>
+  </section>
+
+  <section id="ctes" >
+    <h2>CTEs &amp; Window Functions</h2>
+    <pre><code>-- CTE
+WITH recent AS (
+  SELECT * FROM orders WHERE created_at &gt; now() - interval '7 days'
+)
+SELECT count(*) FROM recent;
+
+-- window function
+SELECT id, amount,
+  rank() OVER (ORDER BY amount DESC)
+FROM sales;
+</code></pre>
+  </section>
+
+  <section id="json" >
+    <h2>JSON &amp; JSONB</h2>
+    <pre><code>-- jsonb column
+CREATE TABLE events (
+  id SERIAL PRIMARY KEY,
+  data JSONB
+);
+
+-- insert
+INSERT INTO events(data) VALUES ('{"type":"click","x":10,"y":20}');
+
+-- query
+SELECT data-&gt;&gt;'type' as type FROM events;
+
+-- index
+CREATE INDEX idx_events_type ON events((data-&gt;&gt;'type'));
+</code></pre>
+  </section>
+
+  <section id="plpgsql" >
+    <h2>PL/pgSQL</h2>
+    <pre><code>-- simple function
+CREATE OR REPLACE FUNCTION add(a int, b int)
+RETURNS int AS $$
+BEGIN
+  RETURN a + b;
+END;
+$$ LANGUAGE plpgsql;
+
+-- trigger
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS trigger AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON users
+FOR EACH ROW EXECUTE FUNCTION update_timestamp();
+</code></pre>
+  </section>
+
+  <section id="roles" >
+    <h2>Users &amp; Roles</h2>
+    <pre><code>-- create user
+CREATE USER alice WITH PASSWORD 'secret';
+
+-- create role
+CREATE ROLE readonly;
+GRANT CONNECT ON DATABASE shop TO readonly;
+GRANT USAGE ON SCHEMA public TO readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly;
+
+-- grant role to user
+GRANT readonly TO alice;
+</code></pre>
+  </section>
+
+  <section id="backup" >
+    <h2>Backup &amp; Restore</h2>
+    <pre><code># backup
+dump -U postgres shop &gt; shop.sql
+
+# restore
+psql -U postgres -d shop -f shop.sql
+
+# custom format
+dump -Fc shop &gt; shop.dump
+pg_restore -U postgres -d shop shop.dump
+</code></pre>
+  </section>
+
+  <section id="performance" >
+    <h2>Performance Tuning</h2>
+    <ul class="small">
+      <li>Use <code>EXPLAIN ANALYZE</code> to check query plans.</li>
+      <li>Add indexes for frequent WHERE/JOIN columns.</li>
+      <li>Vacuum &amp; analyze tables: <code>VACUUM ANALYZE;</code>.</li>
+      <li>Partition large tables.</li>
+      <li>Use connection pooling (PgBouncer, Pgpool-II).</li>
+      <li>Avoid SELECT * in production queries.</li>
+    </ul>
+  </section>
+
+  <section id="tips" >
+    <h2>Tips &amp; Best Practices</h2>
+    <ul class="small">
+      <li>Always define primary keys.</li>
+      <li>Prefer <code>BIGSERIAL</code> for ids if large datasets expected.</li>
+      <li>Use CHECK constraints for data integrity.</li>
+      <li>Favor JSONB over JSON for indexing and efficiency.</li>
+      <li>Regularly backup and test restores.</li>
+    </ul>
+  </section>
+
+  <section id="resources" >
+    <h2>Resources</h2>
+    <ul class="small">
+      <li>Docs: https://www.postgresql.org/docs/</li>
+      <li>SQL style guide: https://www.sqlstyle.guide/</li>
+      <li>Learn: https://www.postgresqltutorial.com/</li>
+      <li>Extensions: PostGIS, pg_partman, TimescaleDB</li>
+    </ul>
+  </section>
+
+  <div class="small">This body-only snippet provides PostgreSQL basics to advanced topics. Add header/footer as per your template.</div>
+
+
+
+  <div id="footer"></div>
+ </div>
+<script src="index.js"></script>
+
+</body>
+</html>
