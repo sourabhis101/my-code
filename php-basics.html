@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Code Journey</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body >
+    <div id="header"></div>
+ <div class="container">
+<main class="container">
+ <h1>Php — Basics to Advanced (Cheat‑sheet & Examples)</h1>
+<p class="lead">Readable, copy-ready examples to learn php from first steps to advanced patterns.</p>
+
+  <section id="setup" >
+    <h2>Setup &amp; Environment</h2>
+    <p class="small">Install PHP (recommended latest stable). Use PHP built-in server for development: <code>php -S localhost:8000</code>. Use Xdebug for debugging and PHP-CS-Fixer / phpcs for linting.</p>
+    <pre><code>// check version
+php -v
+
+// run built-in server
+php -S localhost:8000 -t public
+</code></pre>
+  </section>
+
+  <section id="hello" >
+    <h2>Hello World</h2>
+    <pre><code>&lt;?php
+
+echo "Hello, PHP!\n";
+
+?&gt;
+</code></pre>
+    <p class="small">Save as <code>index.php</code> and visit <code>http://localhost:8000</code>.</p>
+  </section>
+
+  <section id="syntax" >
+    <h2>Syntax &amp; Variables</h2>
+    <pre><code>&lt;?php
+// variables
+$int = 10;
+$float = 3.14;
+$string = "hello";
+$bool = true;
+
+// constants
+define('APP_NAME', 'MyApp');
+const VERSION = '1.0.0';
+
+// types are dynamic but you can type-hint
+function sum(int $a, int $b): int { return $a + $b; }
+
+?&gt;
+</code></pre>
+  </section>
+
+  <section id="control" >
+    <h2>Control Flow</h2>
+    <pre><code>&lt;?php
+if ($x &gt; 0) {
+  echo "positive";
+} elseif ($x &lt; 0) {
+  echo "negative";
+} else {
+  echo "zero";
+}
+
+// switch
+switch ($value) {
+  case 'a': break;
+  default: break;
+}
+
+// loops
+for ($i=0;$i&lt;10;$i++){}
+foreach ($arr as $k =&gt; $v){}
+while ($cond){}
+
+?&gt;
+</code></pre>
+  </section>
+
+  <section id="functions" >
+    <h2>Functions</h2>
+    <pre><code>&lt;?php
+// simple function
+function greet(string $name = 'Guest'): string {
+  return "Hello, $name";
+}
+
+// variadic
+function sumAll(int ...$nums): int {
+  return array_sum($nums);
+}
+
+// closures
+$adder = fn($a,$b) =&gt; $a + $b; // arrow fn (php 7.4+)
+
+?&gt;
+</code></pre>
+  </section>
+
+  <section id="oop" >
+    <h2>OOP: Classes &amp; Objects</h2>
+    <pre><code>&lt;?php
+class User {
+  private string $name;
+  public function __construct(string $name) { $this->name = $name; }
+  public function getName(): string { return $this->name; }
+  public static function makeGuest(): self { return new self('Guest'); }
+}
+
+// inheritance
+class Admin extends User {
+  public function isAdmin(): bool { return true; }
+}
+
+// interfaces & traits
+interface Logger { public function log(string $msg): void; }
+trait Timestamped { public function now(): string { return date('c'); } }
+
+?&gt;
+</code></pre>
+    <p class="small">Use typed properties (PHP 7.4+). Favor composition over deep inheritance.</p>
+  </section>
+
+  <section id="exceptions" >
+    <h2>Exceptions &amp; Errors</h2>
+    <pre><code>&lt;?php
+try {
+  // something
+} catch (\Exception $e) {
+  error_log($e->getMessage());
+  throw $e; // or handle
+} finally {
+  // cleanup
+}
+
+// custom exception
+class MyError extends \Exception {}
+
+?&gt;
+</code></pre>
+  </section>
+
+  <section id="arrays" >
+    <h2>Arrays &amp; Iterables</h2>
+    <pre><code>&lt;?php
+// associative array
+$user = ['id'=&gt;1, 'name'=&gt;'Alice'];
+
+// indexed
+$nums = [1,2,3];
+
+// array functions
+array_map(fn($v) =&gt; $v * 2, $nums);
+array_filter($nums, fn($v) =&gt; $v &gt; 1);
+
+// traversing
+foreach ($user as $k =&gt; $v) { echo "$k: $v\n"; }
+
+?&gt;
+</code></pre>
+  </section>
+
+  <section id="namespaces" >
+    <h2>Namespaces &amp; Autoloading</h2>
+    <pre><code>&lt;?php
+namespace App\Controllers;
+
+class HomeController {}
+
+// composer autoload (PSR-4) is standard
+
+?&gt;
+</code></pre>
+    <p class="small">Configure <code>composer.json</code> autoload section and run <code>composer dump-autoload</code>.</p>
+  </section>
+
+  <section id="composer" >
+    <h2>Composer &amp; Packages</h2>
+    <pre><code>// init project
+composer init
+
+// require package
+composer require guzzlehttp/guzzle
+
+// autoload usage
+require 'vendor/autoload.php';
+$client = new GuzzleHttp\Client();
+
+</code></pre>
+  </section>
+
+  <section id="db" >
+    <h2>Databases (PDO)</h2>
+    <pre><code>&lt;?php
+$dsn = 'mysql:host=127.0.0.1;dbname=testdb;charset=utf8mb4';
+$pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE =&gt; PDO::ERRMODE_EXCEPTION]);
+
+// prepared statement
+$stmt = $pdo->prepare('SELECT id, name FROM users WHERE id = :id');
+$stmt->execute(['id' =&gt; $id]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// transactions
+$pdo->beginTransaction();
+try {
+  // ...
+  $pdo->commit();
+} catch (Exception $e) {
+  $pdo->rollBack();
+  throw $e;
+}
+
+?&gt;
+</code></pre>
+  </section>
+
+  <section id="http" >
+    <h2>HTTP &amp; Web APIs</h2>
+    <pre><code>&lt;?php
+// get input
+$name = $_GET['name'] ?? 'guest';
+
+// JSON response
+header('Content-Type: application/json');
+echo json_encode(['name' =&gt; $name]);
+
+// simple router (very small)
+$path = $_SERVER['REQUEST_URI'];
+switch ($path) {
+  case '/': include 'views/home.php'; break;
+  case '/api': include 'api.php'; break;
+  default: http_response_code(404); echo 'Not found';
+}
+
+?&gt;
+</code></pre>
+    <p class="small">For production APIs consider frameworks like Laravel, Symfony, or micro frameworks like Slim/Flight.</p>
+  </section>
+
+  <section id="security" >
+    <h2>Security Best Practices</h2>
+    <ul class="small">
+      <li>Always use prepared statements to avoid SQL injection.</li>
+      <li>Escape output (use <code>htmlspecialchars</code>) to prevent XSS.</li>
+      <li>Validate and sanitize user input.</li>
+      <li>Store password hashes using <code>password_hash</code> and verify with <code>password_verify</code>.</li>
+      <li>Use HTTPS and set proper headers (HSTS, Content-Security-Policy).</li>
+      <li>Limit file uploads and validate file types.</li>
+    </ul>
+  </section>
+
+  <section id="testing" >
+    <h2>Testing (PHPUnit)</h2>
+    <pre><code>// example test
+use PHPUnit\Framework\TestCase;
+
+class MathTest extends TestCase {
+  public function testSum() {
+    $this->assertEquals(5, 2 + 3);
+  }
+}
+
+// run: vendor/bin/phpunit
+</code></pre>
+  </section>
+
+  <section id="tips" >
+    <h2>Tips &amp; Best Practices</h2>
+    <ul class="small">
+      <li>Use typed properties and strict types: <code>declare(strict_types=1);</code>.</li>
+      <li>Follow PSR standards (PSR-12 coding style, PSR-4 autoloading).</li>
+      <li>Keep controllers thin; put logic in services.</li>
+      <li>Use environment variables for config (Dotenv).</li>
+      <li>Run static analysis (PHPStan, Psalm).</li>
+    </ul>
+  </section>
+
+  <section id="resources" >
+    <h2>Resources</h2>
+    <ul class="small">
+      <li>Official: https://www.php.net/</li>
+      <li>Composer: https://getcomposer.org/</li>
+      <li>PHP:The Right Way: https://phptherightway.com/</li>
+      <li>Laracasts (learning): https://laracasts.com/</li>
+    </ul>
+  </section>
+
+  <div class="small">Copy these sections into your existing HTML body. This snippet deliberately omits header and footer as requested.</div>
+</main>
+
+
+  <div id="footer"></div>
+ </div>
+<script src="index.js"></script>
+
+</body>
+</html>

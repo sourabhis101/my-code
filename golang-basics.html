@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Code Journey</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body >
+    <div id="header"></div>
+
+   <div class="container">
+  <h1>Golang — Basics to Advanced (Cheat‑sheet & Examples)</h1>
+  <p class="lead">Readable, copy-ready examples to learn Go from first steps to advanced patterns.</p>
+
+<section id="setup" >
+  <h2>Setup</h2>
+  <p class="small">Install Go (current stable), set <code>GOPATH</code> if needed (modules work outside GOPATH). Initialize a module with <code>go mod init &lt;module-name&gt;</code>.</p>
+  <pre><code>// terminal
+# install from https://go.dev/dl
+go version
+mkdir myproj && cd myproj
+go mod init github.com/you/myproj
+</code></pre>
+  <p class="note">Go modules are the standard. Use <code>go build</code>, <code>go run</code>, <code>go test</code>, <code>go vet</code>, and <code>gofmt</code> (or <code>go fmt</code>).</p>
+</section>
+
+<section id="hello" >
+  <h2>Hello World</h2>
+  <pre><code>package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, Go!")
+}
+</code></pre>
+  <p class="small">Run: <code>go run main.go</code>. Build binary: <code>go build</code>.</p>
+</section>
+
+<section id="basics" >
+  <h2>Basics — variables, constants, types</h2>
+  <pre><code>package main
+
+import "fmt"
+
+func main(){
+    // explicit
+    var a int = 10
+    // type inferred
+    b := 20
+    // constants
+    const pi = 3.14159
+
+    // zero values
+    var s string // ""
+    var i int    // 0
+
+    fmt.Println(a,b,pi,s,i)
+}
+</code></pre>
+  <p class="small">Built-in types: <code>int, int64, uint, float32, float64, bool, string, byte, rune, complex64</code>. Use <code>type</code> for aliases or new types.</p>
+</section>
+
+<section id="control" >
+  <h2>Control Flow</h2>
+  <pre><code>// if/else
+if x := compute(); x &gt; 0 {
+  // use x
+} else {
+}
+
+// for (only loop)
+for i := 0; i &lt; 10; i++ {
+}
+
+// while-style
+for i &lt; 10 {
+  i++
+}
+
+// range over slice/map
+for idx, v := range arr {
+}
+
+// switch
+switch v := value.(type) {
+case int:
+case string:
+default:
+}
+</code></pre>
+</section>
+
+<section id="functions" >
+  <h2>Functions</h2>
+  <pre><code>package main
+
+import "fmt"
+
+func add(a, b int) int { return a + b }
+
+// named return
+func divmod(a, b int) (q, r int) {
+    q = a / b
+    r = a % b
+    return
+}
+
+// variadic
+func sum(nums ...int) int {
+    total := 0
+    for _, v := range nums { total += v }
+    return total
+}
+
+func main(){
+    fmt.Println(add(2,3), divmod(10,3), sum(1,2,3))
+}
+</code></pre>
+  <p class="small">Prefer small, pure functions. Keep function signatures simple.</p>
+</section>
+
+<section id="structs" >
+  <h2>Structs &amp; Methods</h2>
+  <pre><code>package main
+
+import "fmt"
+
+type Point struct { X, Y float64 }
+
+// method with value receiver
+func (p Point) Distance() float64 {
+    return p.X*p.X + p.Y*p.Y
+}
+
+// method with pointer receiver
+func (p *Point) Translate(dx, dy float64) {
+    p.X += dx; p.Y += dy
+}
+
+func main(){
+    p := Point{3,4}
+    fmt.Println(p.Distance())
+    p.Translate(1,2)
+    fmt.Println(p)
+}
+</code></pre>
+  <p class="small">Use pointer receivers to modify state or avoid large copies.</p>
+</section>
+
+<section id="interfaces" >
+  <h2>Interfaces</h2>
+  <pre><code>package main
+
+import "fmt"
+
+type Stringer interface {
+    String() string
+}
+
+type Person struct{ Name string }
+func (p Person) String() string { return "Person:" + p.Name }
+
+func printIt(s Stringer) { fmt.Println(s.String()) }
+
+func main(){
+    printIt(Person{"Alex"})
+}
+</code></pre>
+  <p class="small">Interfaces are satisfied implicitly. Favor small interfaces (e.g. <code>io.Reader</code>).</p>
+</section>
+
+<section id="slices-maps" >
+  <h2>Slices &amp; Maps</h2>
+  <pre><code>// slices
+s := make([]int, 0, 10) // len 0 cap 10
+s = append(s, 1,2,3)
+sub := s[1:3]
+
+// maps
+m := map[string]int{"a":1}
+m["b"] = 2
+v, ok := m["c"]  // ok == false if missing
+
+// iterate
+for i, v := range s { _ = i; _ = v }
+for k, v := range m { _ = k; _ = v }
+</code></pre>
+  <p class="small">Remember: maps are reference types; they must be initialized before use: <code>var m map[string]int // nil</code>.</p>
+</section>
+
+<section id="concurrency" >
+  <h2>Concurrency — goroutines &amp; channels</h2>
+  <pre><code>// goroutine
+go func(){
+  fmt.Println("background")
+}()
+
+// channel
+ch := make(chan int)
+
+// sender
+go func(){ ch &lt;- 42 }()
+
+// receiver
+v := &lt;-ch
+
+// buffered
+buf := make(chan int, 2)
+
+// select
+select {
+case v := &lt;-ch:
+    fmt.Println(v)
+case <-time.After(time.Second):
+    fmt.Println("timeout")
+}
+</code></pre>
+  <p class="small">Use channels to coordinate and communicate. Prefer simpler concurrency patterns (worker pools, fan-out/fan-in).</p>
+</section>
+
+<section id="errors" >
+  <h2>Error Handling</h2>
+  <pre><code>f, err := os.Open("file.txt")
+if err != nil {
+    return fmt.Errorf("open: %w", err) // wrap
+}
+// best practice: check errors early and return
+</code></pre>
+  <p class="small">Use <code>%w</code> for error wrapping and <code>errors.Is/errors.As</code> to inspect wrapped errors.</p>
+</section>
+
+<section id="testing" >
+  <h2>Testing</h2>
+  <pre><code>// file: add_test.go
+package main
+
+import "testing"
+
+func TestAdd(t *testing.T) {
+    if add(2,3) != 5 { t.Fatal("add failed") }
+}
+</code></pre>
+  <p class="small">Run tests with <code>go test ./...</code>. Use subtests, table tests, and <code>t.Run</code> for coverage. Benchmark with <code>go test -bench=.</code>.</p>
+</section>
+
+<section id="modules" >
+  <h2>Modules &amp; Packages</h2>
+  <pre><code>// initialize module
+go mod init github.com/you/project
+
+// add dependency
+go get github.com/some/dependency@v1.2.3
+</code></pre>
+  <p class="small">Organize code into packages; keep package names short and meaningful. Use import paths from your module root.</p>
+</section>
+
+<section id="generics" >
+  <h2>Generics (type parameters)</h2>
+  <pre><code>package main
+
+import "fmt"
+
+// generic function
+func IndexOf[T comparable](slice []T, v T) int {
+    for i, x := range slice { if x == v { return i } }
+    return -1
+}
+
+func main(){
+    fmt.Println(IndexOf([]int{1,2,3}, 2))
+    fmt.Println(IndexOf([]string{"a","b"}, "b"))
+}
+</code></pre>
+  <p class="small">Generics enable type-safe reusable code. Use constraints from <code>~</code> and interfaces; prefer simple constraints.</p>
+</section>
+
+<section id="context" >
+  <h2>Context &amp; Cancellation</h2>
+  <pre><code>ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+defer cancel()
+
+// pass ctx to io/db/http calls
+req = req.WithContext(ctx)
+</code></pre>
+  <p class="small">Context carries deadlines, cancellation signals, and request-scoped values. Don't store large values in context.</p>
+</section>
+
+<section id="reflection" >
+  <h2>Reflection (reflect)</h2>
+  <pre><code>import "reflect"
+
+v := reflect.ValueOf(42)
+fmt.Println(v.Kind(), v.Int())
+</code></pre>
+  <p class="small">Use reflection sparingly; prefer concrete types. Reflection is for libraries and frameworks when necessary.</p>
+</section>
+
+<section id="io-net" >
+  <h2>File I/O &amp; Networking</h2>
+  <pre><code>// read file
+b, err := os.ReadFile("data.txt")
+if err != nil { return }
+
+// simple HTTP GET
+resp, err := http.Get("https://example.com")
+defer resp.Body.Close()
+body, _ := io.ReadAll(resp.Body)
+</code></pre>
+</section>
+
+<section id="web" >
+  <h2>Building a Minimal Web Server</h2>
+  <pre><code>package main
+
+import (
+  "fmt"
+  "net/http"
+)
+
+func hello(w http.ResponseWriter, r *http.Request) {
+  fmt.Fprintf(w, "Hello %s", r.URL.Path[1:])
+}
+
+func main(){
+  http.HandleFunc("/", hello)
+  http.ListenAndServe(":8080", nil)
+}
+</code></pre>
+  <p class="small">Use <code>net/http</code> for small services. For production, consider frameworks (chi, gin) and proper timeouts.</p>
+</section>
+
+<section id="db" >
+  <h2>Databases (database/sql)</h2>
+  <pre><code>import (
+  "database/sql"
+  _ "github.com/lib/pq" // postgres driver
+)
+
+db, err := sql.Open("postgres", connStr)
+rows, err := db.Query("SELECT id, name FROM users")
+for rows.Next() {
+  var id int; var name string
+  rows.Scan(&id, &name)
+}
+</code></pre>
+  <p class="small">Use prepared statements, context, and connection pooling. Consider sqlx or gorm for convenience layers.</p>
+</section>
+
+<section id="tips" >
+  <h2>Tips &amp; Best Practices</h2>
+  <ul class="small">
+    <li>Write small packages; keep tests fast.</li>
+    <li>Prefer explicit error handling over panic; use <code>panic</code> only for unrecoverable conditions.</li>
+    <li>Format with <code>gofmt</code> and run <code>go vet</code>.</li>
+    <li>Use linters (staticcheck, golangci-lint).</li>
+    <li>Document public APIs with comments; run <code>go doc</code>.</li>
+    <li>Beware of nil slices vs empty slices; prefer zero values where sensible.</li>
+  </ul>
+</section>
+
+<section id="resources" >
+  <h2>Further Resources</h2>
+  <ul class="small">
+    <li>Official site: https://go.dev/</li>
+    <li>Effective Go: https://go.dev/doc/effective_go</li>
+    <li>Go by Example: https://gobyexample.com/</li>
+    <li>Go blog: https://blog.golang.org/</li>
+  </ul>
+</section>
+
+<div id="footer"></div>
+  </div>
+  
+
+
+ 
+<script src="index.js"></script>
+
+</body>
+</html>
